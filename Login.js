@@ -1,6 +1,7 @@
 import {useState} from "react";
 import { SafeAreaView, StyleSheet, TextInput, Text, TouchableOpacity} from "react-native";
 
+
 const sendText = async (phoneNumber) => {
   console.log("Phone Number: ", phoneNumber);
   await fetch('https://dev.stedi.me/twofactorlogin/' + phoneNumber, {
@@ -11,7 +12,7 @@ const sendText = async (phoneNumber) => {
   })
 }
 
-const getToken = async ({phoneNumber, oneTimePassword}) => {
+const getToken = async ({phoneNumber, oneTimePassword, setUserLoggedIn}) => {
   const tokenResponse = await fetch('https://dev.stedi.me/twofactorlogin',  {
     method: 'POST',
     body:JSON.stringify({oneTimePassword, phoneNumber}),
@@ -20,11 +21,23 @@ const getToken = async ({phoneNumber, oneTimePassword}) => {
     }
   });
 
+   const responseCode = tokenResponse.status;
+   console.log("Response Status Code", responseCode)
+   if(responseCode == 200){
+    setUserLoggedIn(true);
+   }
+
   const tokenResponseString = await tokenResponse.text();
   console.log(tokenResponseString)
-}
+  
+  const emailFetch = await fetch('https://dev.stedi.me/validate/' + tokenResponseString);
+  
+  const email = await emailFetch.text();
+  console.log(email)
+  };
 
-const Login = () => {
+
+const Login = (props) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [oneTimePassword, setOneTimePassword] = useState(null);
 
@@ -54,8 +67,7 @@ const Login = () => {
       />
       <TouchableOpacity
         style={styles.button}
-        onPress={()=>{getToken({phoneNumber, oneTimePassword})}}
-        // onPress={()=>{console.log('Login button was clicked')}}
+        onPress={()=>{getToken({phoneNumber, oneTimePassword, setUserLoggedIn:props.setUserLoggedIn})}}
       >
         <Text>Login</Text>
       </TouchableOpacity>
