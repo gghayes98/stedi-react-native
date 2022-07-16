@@ -16,7 +16,7 @@ var userEmail;
 
   function doStuff() {
     if(userEmail == "error")
-      setTimeout(doStuff, 50);
+      setTimeout(doStuff, 500);
     else
       userEmail = getEmail()
 }
