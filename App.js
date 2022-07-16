@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Counter from './Counter.js';
-import Login from './Login.js';
+import {Login, getEmail} from './Login.js';
 import SettingsScreen from './SettingsScreen.js';
 import Home from './Home.js';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -12,12 +12,20 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 // import Icons from "./Icons";
 const Tab = createMaterialBottomTabNavigator();
-const userEmail = 'email@email.com';
+var userEmail;
+
+  function doStuff() {
+    if(userEmail == "error")
+      setTimeout(doStuff, 50);
+    else
+      userEmail = getEmail()
+}
 
 export default function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   
   if (userLoggedIn){
+    doStuff()
   return (
     <NavigationContainer>
       <Tab.Navigator

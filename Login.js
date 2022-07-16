@@ -12,6 +12,8 @@ const sendText = async (phoneNumber) => {
   })
 }
 
+var email = "error";
+
 const getToken = async ({phoneNumber, oneTimePassword, setUserLoggedIn}) => {
   const tokenResponse = await fetch('https://dev.stedi.me/twofactorlogin',  {
     method: 'POST',
@@ -32,10 +34,13 @@ const getToken = async ({phoneNumber, oneTimePassword, setUserLoggedIn}) => {
   
   const emailFetch = await fetch('https://dev.stedi.me/validate/' + tokenResponseString);
   
-  const email = await emailFetch.text();
+  email = await emailFetch.text();
   console.log(email)
-  };
+};
 
+function getEmail() {
+  return email;
+}
 
 const Login = (props) => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -92,4 +97,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Login;
+export {Login, getEmail};
